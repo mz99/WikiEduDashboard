@@ -27,6 +27,8 @@ ENV['training_path'] = 'training_content/wiki_ed'
 ENV['enable_chat'] = 'true'
 ENV['chat_admin_username'] = 'username'
 ENV['chat_admin_password'] = 'password'
+ENV['chat_server'] = 'https://dashboardchat.wmflabs.org'
+ENV['SF_SERVER'] = 'https://cs54.salesforce.com/'
 
 Rails.application.configure do
   # Settings specified here will take
