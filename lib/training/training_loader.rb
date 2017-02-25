@@ -31,8 +31,18 @@ class TrainingLoader
     end
   end
 
+  CONCURRENCY = 30
   def load_from_wiki
-    wiki_source_pages.each do |wiki_page|
+    source_pages = wiki_source_pages
+    thread_count = [CONCURRENCY, source_pages.count].min
+    threads = source_pages.in_groups(thread_count, false).map.with_index do |wiki_page_group, i|
+      Thread.new(i) { add_trainings_to_collection(wiki_page_group) }
+    end
+    threads.each(&:join)
+  end
+
+  def add_trainings_to_collection(wiki_pages)
+    wiki_pages.each do |wiki_page|
       content = new_from_wiki_page(wiki_page)
       unless content&.valid?
         Raven.capture_message 'Invalid wiki training content',
@@ -78,7 +88,7 @@ class TrainingLoader
   end
 
   def translated_wiki_pages(base_page:)
-    return [] unless base_page
+    return [] unless base_page&.include? '<translate>'
     translations_query = { meta: 'messagegroupstats',
                            mgsgroup: "page-#{base_page}" }
     response = WikiApi.new(MetaWiki.new).query(translations_query)
