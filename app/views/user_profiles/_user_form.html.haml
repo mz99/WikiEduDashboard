@@ -10,7 +10,9 @@
         #user_image
           - if @user&.user_profile&.image.present?
             = image_tag @user.user_profile.image.url(:thumb)
-          = file_field(:user_profile, :image, class: 'rails_editable-input')
+          - else
+            %img{:src => "/assets/images/user.svg", :alt => "user default logo"}
+        = file_field(:user_profile, :image, class: 'rails_editable-input')
 
     #profile_right
       .header
@@ -46,7 +48,7 @@
             #user_location
               - if @user&.user_profile&.location.present?
                 #icon
-                  %img{:src => "/assets/images/location.png", :alt => "location logo"}
+                  %img{:src => "/assets/images/location.svg", :alt => "location logo"}
               .rails_editable-field
                 - if @user&.user_profile&.location.present?
                   %p.rails_editable-content
@@ -57,7 +59,7 @@
             #user_institution
               -if @user&.user_profile&.institution.present?
                 #icon
-                  %img{:src => "/assets/images/institution.png", :alt => "institution logo"}
+                  %img{:src => "/assets/images/institution.svg", :alt => "institution logo"}
               .rails_editable-field
                 - if @user&.user_profile&.institution.present?
                   %p.rails_editable-content
